@@ -13,6 +13,21 @@
 
     <canvas id="particle-canvas"></canvas>
 
+    <!-- ШАПКА С ЛОГОТИПОМ -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo-area">
+                <img src="assets/logo.png" alt="CompareTech Logo" class="logo-img" onerror="this.src='https://placehold.co/1000x1000/1e293b/3b82f6?text=CompareTech'">
+            </div>
+            <div class="nav-links">
+                <a href="#platforms">Платформы</a>
+                <a href="#calculator">Калькулятор PSU</a>
+                <a href="#fps-chart">FPS тесты</a>
+                <a href="#prices" class="nav-cta">Сравнить цены</a>
+            </div>
+        </div>
+    </nav>
+
     <header class="hero">
         <div class="container">
             <div class="hero-content">
@@ -39,7 +54,7 @@
 
     <main>
         <!-- ПОПУЛЯРНОЕ ОБЪЯСНЕНИЕ: ВЫБОР ПЛАТФОРМЫ -->
-        <section class="platform-guide">
+        <section id="platforms" class="platform-guide">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">🤔 С чего начать? Выбираем платформу</h2>
@@ -134,7 +149,7 @@
         </section>
 
         <!-- ГРАФИК FPS И ЭФФЕКТИВНОСТЬ -->
-        <section class="fps-comparison">
+        <section id="fps-chart" class="fps-comparison">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">📊 Сравнение FPS и эффективность</h2>
@@ -275,21 +290,21 @@
                             <li>🛒 8 проверенных магазинов: DNS, Citilink, Ozon, Wildberries, MVideo</li>
                             <li>📊 График цен за 30 дней — поймай скидку</li>
                             <li>🔧 Проверка совместимости за секунду</li>
-                            <li>⭐ 1200+ реальных отзывов о сборках</li>
+                            <li>⭐ 120+ реальных отзывов о сборках</li>
                         </ul>
-                        <a href="#" class="btn-primary cta-btn">💸 Перейти к сравнению цен</a>
+                        <a href="https://www.youtube.com/watch?v=k2ZptBt1uNs" class="btn-primary cta-btn">💸 Перейти к сравнению цен</a>
                     </div>
                     <div class="cta-stats">
                         <div class="stat-simple">
-                            <span class="stat-num" data-target="2840">0</span>
+                            <span class="stat-num" data-target="5051">0</span>
                             <span>комплектующих в базе</span>
                         </div>
                         <div class="stat-simple">
-                            <span class="stat-num" data-target="48">0</span>
+                            <span class="stat-num" data-target="23">0</span>
                             <span>магазинов-партнёров</span>
                         </div>
                         <div class="stat-simple">
-                            <span class="stat-num" data-target="3250">0</span>
+                            <span class="stat-num" data-target="1052">0</span>
                             <span>собранных сборок</span>
                         </div>
                     </div>
@@ -300,7 +315,7 @@
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
-                    <div class="footer-brand">⚡ CompareTech — собирай с умом</div>
+                    <div class="footer-brand">⚡ Z-catalog — собирай с умом</div>
                     <div class="footer-links">
                         <a href="#">База знаний</a>
                         <a href="#">Контакты</a>
