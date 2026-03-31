@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Сборка ПК — Гид по выбору | CompareTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="glow-text">✨ Собери ПК мечты ✨</div>
+                <h1 class="hero-title">Мощный компьютер<br><span class="gradient-text">без переплат</span></h1>
+                <p class="hero-desc">Разбираемся в совместимости, подбираем железо под бюджет и считаем реальную производительность. А потом — сравниваем цены в магазинах!</p>
+                <div class="hero-actions">
+                    <a href="#calculator" class="btn-primary">🧮 Подобрать сборку</a>
+                    <a href="#prices" class="btn-outline">💰 Сравнить цены</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Плавающие элементы распределены по краям -->
+        <div class="floating-elements">
+            <div class="float-card float-1">⚡ Intel Core i9-14900K</div>
+            <div class="float-card float-2">🎮 RTX 4090</div>
+            <div class="float-card float-3">💾 DDR5 32GB</div>
+            <div class="float-card float-4">🔌 1000W Platinum</div>
+            <div class="float-card float-5">🖥️ AMD Ryzen 7 7800X3D</div>
+            <div class="float-card float-6">❄️ Arctic Liquid Freezer III</div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ПОПУЛЯРНОЕ ОБЪЯСНЕНИЕ: ВЫБОР ПЛАТФОРМЫ -->
+        <section class="platform-guide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🤔 С чего начать? Выбираем платформу</h2>
+                    <p class="section-subtitle">AMD или Intel? DDR4 или DDR5? Разберем популярные варианты с реальными ценами</p>
+                </div>
+                
+                <div class="platform-grid">
+                    <div class="platform-card am4">
+                        <div class="platform-badge">Бюджетный 🔥</div>
+                        <h3>AMD AM4 (DDR4)</h3>
+                        <div class="platform-price">от 25 000 ₽</div>
+                        <ul>
+                            <li>✅ Ryzen 5 5600 — 8 500₽</li>
+                            <li>✅ Материнка B550 — 7 000₽</li>
+                            <li>✅ DDR4 32GB (3200MHz) — 6 000₽</li>
+                            <li>✅ Отличный выбор для 1080p</li>
+                        </ul>
+                        <div class="platform-tip">💡 Идеально: RTX 3060 / RX 6600 + 650W блок питания</div>
+                    </div>
+                    
+                    <div class="platform-card am5 featured">
+                        <div class="platform-badge">Современный ⚡</div>
+                        <h3>AMD AM5 (DDR5)</h3>
+                        <div class="platform-price">от 55 000 ₽</div>
+                        <ul>
+                            <li>✅ Ryzen 5 7600 — 18 000₽</li>
+                            <li>✅ Материнка B650 — 12 000₽</li>
+                            <li>✅ DDR5 32GB (6000MHz) — 10 000₽</li>
+                            <li>✅ Идеально для 1440p / 4K</li>
+                        </ul>
+                        <div class="platform-tip">💡 Рекомендуем: RTX 4070 / 4070 Ti Super + 750W PSU</div>
+                    </div>
+                    
+                    <div class="platform-card intel">
+                        <div class="platform-badge">Производительный 🚀</div>
+                        <h3>Intel LGA1700 (DDR4/DDR5)</h3>
+                        <div class="platform-price">от 40 000 ₽</div>
+                        <ul>
+                            <li>✅ i5-13400F — 12 000₽ / i7-13700K — 28 000₽</li>
+                            <li>✅ Материнка B760 — 10 000₽</li>
+                            <li>✅ Можно выбрать DDR4 (эконом) или DDR5</li>
+                            <li>✅ Хорош для монтажа и стримов</li>
+                        </ul>
+                        <div class="platform-tip">💡 Для стримов бери i7 + RTX 4070, блок 750W</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КАЛЬКУЛЯТОР БЛОКА ПИТАНИЯ -->
+        <section id="calculator" class="psu-calculator">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🔌 Калькулятор блока питания</h2>
+                    <p class="section-subtitle">Рассчитай, сколько ватт нужно твоей сборке</p>
+                </div>
+                
+                <div class="calculator-wrapper">
+                    <div class="calc-controls">
+                        <div class="calc-group">
+                            <label>🎮 Видеокарта</label>
+                            <select id="gpu-select">
+                                <option value="150">NVIDIA GTX 1660 / RX 6600 (150W)</option>
+                                <option value="200">RTX 3060 / RX 6700 XT (200W)</option>
+                                <option value="250">RTX 4060 Ti / RX 7700 XT (250W)</option>
+                                <option value="320" selected>RTX 4070 / RX 7800 XT (320W)</option>
+                                <option value="400">RTX 4070 Ti Super (400W)</option>
+                                <option value="520">RTX 4080 Super (520W)</option>
+                                <option value="600">RTX 4090 (600W)</option>
+                            </select>
+                        </div>
+                        <div class="calc-group">
+                            <label>⚙️ Процессор</label>
+                            <select id="cpu-select">
+                                <option value="65">Ryzen 5 / i5 (65W)</option>
+                                <option value="125" selected>Ryzen 7 / i7 (125W)</option>
+                                <option value="170">Ryzen 9 / i9 (170W)</option>
+                            </select>
+                        </div>
+                        <div class="calc-result">
+                            <div class="result-number"><span id="total-watts">0</span> Вт</div>
+                            <div class="result-recommendation" id="psu-recommend">Рекомендуемый блок питания:</div>
+                        </div>
+                    </div>
+                    <div class="psu-tips">
+                        <div class="tip-card">💡 Запас мощности = (GPU + CPU) × 1.3 + 50W (на остальное)</div>
+                        <div class="tip-card">🔋 Бренды: Corsair, be quiet!, Seasonic, DeepCool</div>
+                        <div class="tip-card">⭐ Сертификат: Bronze минимум, Gold — оптимально</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ГРАФИК FPS И ЭФФЕКТИВНОСТЬ -->
+        <section class="fps-comparison">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">📊 Сравнение FPS и эффективность</h2>
+                    <p class="section-subtitle">Сколько кадров в секунду за твой рубль?</p>
+                </div>
+                
+                <div class="fps-chart">
+                    <div class="chart-bars">
+                        <div class="bar-item" data-price="45000" data-fps="80">
+                            <div class="bar-label">RTX 3060 + R5 5600</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 40%"></div>
+                            </div>
+                            <div class="bar-stats">80 FPS | 45 000₽ | 1.78 FPS/тыс₽</div>
+                        </div>
+                        <div class="bar-item" data-price="75000" data-fps="115">
+                            <div class="bar-label">RTX 4070 + R5 7600</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 57%"></div>
+                            </div>
+                            <div class="bar-stats">115 FPS | 75 000₽ | 1.53 FPS/тыс₽</div>
+                        </div>
+                        <div class="bar-item" data-price="120000" data-fps="165">
+                            <div class="bar-label">RTX 4070 Ti + i7-13700K</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 82%"></div>
+                            </div>
+                            <div class="bar-stats">165 FPS | 120 000₽ | 1.38 FPS/тыс₽</div>
+                        </div>
+                        <div class="bar-item" data-price="200000" data-fps="210">
+                            <div class="bar-label">RTX 4080 Super + 7800X3D</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="bar-stats">210 FPS | 200 000₽ | 1.05 FPS/тыс₽</div>
+                        </div>
+                    </div>
+                    <div class="chart-note">🎮 Данные для Cyberpunk 2077 (1440p, DLSS Quality)</div>
+                </div>
+                
+                <div class="efficiency-matrix">
+                    <h3>🏆 Лучшее соотношение цена/производительность</h3>
+                    <div class="matrix-grid">
+                        <div class="matrix-item gold">
+                            <div class="matrix-title">Игры 1080p</div>
+                            <div class="matrix-build">Ryzen 5 5600 + RTX 4060</div>
+                            <div class="matrix-price">~55 000₽ → 140 FPS в киберспорте</div>
+                        </div>
+                        <div class="matrix-item platinum">
+                            <div class="matrix-title">Игры 1440p</div>
+                            <div class="matrix-build">Ryzen 5 7600 + RX 7800 XT</div>
+                            <div class="matrix-price">~90 000₽ → 100+ FPS в AAA</div>
+                        </div>
+                        <div class="matrix-item diamond">
+                            <div class="matrix-title">Стриминг + игры</div>
+                            <div class="matrix-build">Intel i7-13700K + RTX 4070 Ti</div>
+                            <div class="matrix-price">~140 000₽ → NVENC кодер + мощные ядра</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ ПРОИЗВОДИТЕЛЬНОСТИ С ДИНАМИЧЕСКИМИ КАРТОЧКАМИ -->
+        <section class="performance-showcase">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🎯 Производительность в разных задачах</h2>
+                    <p class="section-subtitle">Выбери сценарий и смотри реальные цифры</p>
+                </div>
+                
+                <div class="perf-tabs">
+                    <button class="perf-tab active" data-scene="gaming">🎮 Игры</button>
+                    <button class="perf-tab" data-scene="work">🎨 Работа/монтаж</button>
+                    <button class="perf-tab" data-scene="stream">📺 Стриминг</button>
+                </div>
+                
+                <div class="perf-scene active" id="scene-gaming">
+                    <div class="scene-grid">
+                        <div class="scene-card">
+                            <div class="scene-spec">🎮 Бюджетный гейминг</div>
+                            <div class="scene-fps">Ryzen 5 5600 + RTX 3060</div>
+                            <div class="scene-metrics">Valorant: 280 FPS | Cyberpunk 1080p Medium: 75 FPS</div>
+                        </div>
+                        <div class="scene-card">
+                            <div class="scene-spec">🔥 Сбалансированный</div>
+                            <div class="scene-fps">Ryzen 5 7600 + RTX 4070</div>
+                            <div class="scene-metrics">1440p Ultra: 120 FPS | 4K DLSS: 85 FPS</div>
+                        </div>
+                        <div class="scene-card">
+                            <div class="scene-spec">💎 Энтузиаст</div>
+                            <div class="scene-fps">7800X3D + RTX 4080 Super</div>
+                            <div class="scene-metrics">4K Ultra RT: 110 FPS | VR без компромиссов</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="perf-scene" id="scene-work">
+                    <div class="scene-grid">
+                        <div class="scene-card">
+                            <div class="scene-spec">🎬 Видеомонтаж 1080p</div>
+                            <div class="scene-fps">i5-13400F + 32GB DDR4 + RTX 3060</div>
+                            <div class="scene-metrics">Premiere Pro: рендер 10-мин видео ~6 минут</div>
+                        </div>
+                        <div class="scene-card">
+                            <div class="scene-spec">🎨 3D / Blender / 4K</div>
+                            <div class="scene-fps">i7-13700K + 64GB DDR5 + RTX 4070 Ti</div>
+                            <div class="scene-metrics">Blender Classroom: 38 сек | After Effects плавно</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="perf-scene" id="scene-stream">
+                    <div class="scene-grid">
+                        <div class="scene-card">
+                            <div class="scene-spec">📹 Стрим + игры 1080p</div>
+                            <div class="scene-fps">Ryzen 7 7700X + RTX 4070</div>
+                            <div class="scene-metrics">OBS x264: 140 FPS в Apex, 0 пропусков</div>
+                        </div>
+                        <div class="scene-card">
+                            <div class="scene-spec">🎥 AV1 / 1440p стриминг</div>
+                            <div class="scene-fps">i7-14700K + ARC A770 / RTX 40 серия</div>
+                            <div class="scene-metrics">AV1 кодер: отличное качество при 6000 kbps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЕРВИС СРАВНЕНИЯ ЦЕН (реалистичные цифры) -->
+        <section id="prices" class="service-cta">
+            <div class="container">
+                <div class="cta-card">
+                    <div class="cta-left">
+                        <div class="cta-badge">🚀 ТВОЙ ПОМОЩНИК</div>
+                        <h2>Сравни цены в магазинах<br>и собери ПК выгодно</h2>
+                        <ul>
+                            <li>🛒 8 проверенных магазинов: DNS, Citilink, Ozon, Wildberries, MVideo</li>
+                            <li>📊 График цен за 30 дней — поймай скидку</li>
+                            <li>🔧 Проверка совместимости за секунду</li>
+                            <li>⭐ 1200+ реальных отзывов о сборках</li>
+                        </ul>
+                        <a href="#" class="btn-primary cta-btn">💸 Перейти к сравнению цен</a>
+                    </div>
+                    <div class="cta-stats">
+                        <div class="stat-simple">
+                            <span class="stat-num" data-target="2840">0</span>
+                            <span>комплектующих в базе</span>
+                        </div>
+                        <div class="stat-simple">
+                            <span class="stat-num" data-target="48">0</span>
+                            <span>магазинов-партнёров</span>
+                        </div>
+                        <div class="stat-simple">
+                            <span class="stat-num" data-target="3250">0</span>
+                            <span>собранных сборок</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-brand">⚡ CompareTech — собирай с умом</div>
+                    <div class="footer-links">
+                        <a href="#">База знаний</a>
+                        <a href="#">Контакты</a>
+                        <a href="#" id="footer-compare">Сравнить цены</a>
+                    </div>
+                    <div class="footer-copy">© 2025 Сборка ПК без переплат. Все цены ориентировочные.</div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
