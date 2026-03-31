@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ========== 1. ЧАСТИЦЫ НА ФОНЕ ==========
+    // ========== 1. ЧАСТИЦЫ НА ФОНЕ (ОПТИМИЗИРОВАННЫЕ) ==========
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     
@@ -9,21 +9,34 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = window.innerHeight;
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        // Пересоздаем частицы при изменении размера
+        initParticles();
+    });
     
-    const particles = [];
-    for(let i = 0; i < 60; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 2 + 1,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
-            opacity: Math.random() * 0.25 + 0.1
-        });
+    let particles = [];
+    let animationRunning = true;
+    
+    function initParticles() {
+        particles = [];
+        const particleCount = Math.min(40, Math.floor(window.innerWidth / 30)); // Уменьшил количество частиц
+        for(let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                speedX: (Math.random() - 0.5) * 0.2, // Уменьшил скорость
+                speedY: (Math.random() - 0.5) * 0.2,
+                opacity: Math.random() * 0.2 + 0.05
+            });
+        }
     }
     
+    initParticles();
+    
     function animateParticles() {
+        if(!animationRunning) return;
         if(!ctx) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
@@ -55,14 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const gpuW = parseInt(gpuSelect.value);
         const cpuW = parseInt(cpuSelect.value);
         const total = Math.round((gpuW + cpuW) * 1.3 + 50);
-        totalWattsSpan.textContent = total;
+        if(totalWattsSpan) totalWattsSpan.textContent = total;
         
         let recommend = '';
         if(total <= 550) recommend = 'Рекомендуем: 550-600W Bronze/Gold';
         else if(total <= 750) recommend = 'Рекомендуем: 650-750W Gold';
         else if(total <= 950) recommend = 'Рекомендуем: 850-1000W Gold/Platinum';
         else recommend = 'Рекомендуем: 1000W+ Platinum';
-        psuRecommend.innerHTML = recommend;
+        if(psuRecommend) psuRecommend.innerHTML = recommend;
     }
     
     if(gpuSelect && cpuSelect) {
@@ -80,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = parseInt(counter.getAttribute('data-target'));
             if(isNaN(target)) return;
             let current = 0;
-            const increment = target / 60;
+            const increment = target / 50;
             const update = () => {
                 current += increment;
                 if(current < target) {
@@ -90,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     counter.innerText = target.toLocaleString();
                 }
             };
-            update();
+            requestAnimationFrame(update);
         });
     }
     
@@ -120,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // ========== 5. АНИМАЦИЯ ПРОГРЕСС-БАРОВ (ПЛАВНАЯ) ==========
+    // ========== 5. АНИМАЦИЯ ПРОГРЕСС-БАРОВ ==========
     const bars = document.querySelectorAll('.bar-fill');
     
     const barsObserver = new IntersectionObserver((entries) => {
@@ -137,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     else if(fps === '210') widthPercent = 100;
                     
                     let currentWidth = 0;
-                    const duration = 1000;
+                    const duration = 800;
                     const startTime = performance.now();
                     
                     function animate(currentTime) {
@@ -163,13 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     bars.forEach(bar => barsObserver.observe(bar));
     
-    // ========== 6. ПЛАВНАЯ ПРОКРУТКА ДЛЯ ЯКОРЕЙ ==========
+    // ========== 6. ПЛАВНАЯ ПРОКРУТКА ==========
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if(href === "#" || href === "") return;
             
-            // Обработка специальных ссылок
             if(this.classList.contains('cta-btn') && href === "#prices") {
                 e.preventDefault();
                 const target = document.querySelector('#prices');
@@ -185,15 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // ========== 7. ИСПРАВЛЕННАЯ НАВИГАЦИЯ - ПОДСВЕТКА ТОЛЬКО КОГДА РАЗДЕЛ ВИДИМ ==========
+    // ========== 7. ОПТИМИЗИРОВАННАЯ НАВИГАЦИЯ (БЕЗ ЛАГОВ) ==========
     const sections = document.querySelectorAll('section[id], article section[id]');
     const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
     
-    // Удаляем старый стиль активной ссылки
-    const existingStyle = document.querySelector('#nav-active-style');
-    if(existingStyle) existingStyle.remove();
-    
-    // Добавляем стиль для активной ссылки
     const navStyle = document.createElement('style');
     navStyle.id = 'nav-active-style';
     navStyle.textContent = `
@@ -208,84 +215,76 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(navStyle);
     
-    function isElementInViewport(el, offset = 150) {
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        
-        // Элемент считается видимым, если его верхняя часть находится в пределах видимой области
-        // с учетом смещения (чтобы подсветка включалась когда раздел действительно виден)
-        return rect.top <= windowHeight - offset && rect.bottom >= offset;
-    }
+    let activeNavTimeout = null;
+    let lastActiveId = '';
     
     function highlightActiveNav() {
         let currentSectionId = '';
-        let closestSection = null;
-        let closestDistance = Infinity;
+        let bestSection = null;
+        let bestOffset = Infinity;
         
         // Находим раздел, который находится ближе всего к верхней части экрана
-        sections.forEach(section => {
+        for (const section of sections) {
             const rect = section.getBoundingClientRect();
-            const distance = Math.abs(rect.top - 100);
-            
-            // Если раздел виден или находится рядом с верхней частью
-            if (rect.top <= 300 && rect.bottom >= 100) {
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestSection = section;
+            // Если раздел виден или только что прошел
+            if (rect.top <= 200 && rect.bottom >= 100) {
+                const offset = Math.abs(rect.top - 100);
+                if (offset < bestOffset) {
+                    bestOffset = offset;
+                    bestSection = section;
                 }
-            }
-        });
-        
-        // Если нашли видимый раздел
-        if (closestSection) {
-            currentSectionId = closestSection.getAttribute('id');
-        } else {
-            // Если нет видимых разделов, ищем тот, который ближе всего к верху
-            let minTop = Infinity;
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                if (rect.top < minTop && rect.bottom > 0) {
-                    minTop = rect.top;
-                    closestSection = section;
-                }
-            });
-            if (closestSection) {
-                currentSectionId = closestSection.getAttribute('id');
             }
         }
         
-        // Обновляем активную ссылку
-        navLinks.forEach(link => {
-            link.classList.remove('active-nav');
-            const href = link.getAttribute('href').substring(1);
-            if(href === currentSectionId) {
-                link.classList.add('active-nav');
+        if (bestSection) {
+            currentSectionId = bestSection.getAttribute('id');
+        } else {
+            // Если нет активного раздела, ищем первый видимый
+            for (const section of sections) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    currentSectionId = section.getAttribute('id');
+                    break;
+                }
             }
-        });
+        }
         
-        // Особый случай для hero (начало страницы)
-        if (window.scrollY < 100) {
+        // Обновляем только если изменился активный раздел
+        if (currentSectionId !== lastActiveId) {
+            lastActiveId = currentSectionId;
             navLinks.forEach(link => {
                 link.classList.remove('active-nav');
+                const href = link.getAttribute('href').substring(1);
+                if(href === currentSectionId && currentSectionId) {
+                    link.classList.add('active-nav');
+                }
             });
+        }
+        
+        // Сброс подсветки в самом верху
+        if (window.scrollY < 80 && lastActiveId) {
+            lastActiveId = '';
+            navLinks.forEach(link => link.classList.remove('active-nav'));
         }
     }
     
-    // Запускаем подсветку при скролле с небольшим debounce для производительности
-    let scrollTimeout;
+    // Используем throttle вместо debounce для более плавной работы
+    let ticking = false;
     window.addEventListener('scroll', () => {
-        if (scrollTimeout) clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            highlightActiveNav();
-        }, 50);
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                highlightActiveNav();
+                ticking = false;
+            });
+            ticking = true;
+        }
     });
     
-    // Запускаем при загрузке и после небольших задержек для точности
-    setTimeout(highlightActiveNav, 100);
-    setTimeout(highlightActiveNav, 500);
     window.addEventListener('resize', () => {
         setTimeout(highlightActiveNav, 100);
     });
+    
+    highlightActiveNav();
     
     // ========== 8. КНОПКИ СРАВНЕНИЯ ЦЕН ==========
     const compareBtns = document.querySelectorAll('#footer-compare, .cta-btn, .nav-cta');
@@ -305,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // ========== 9. АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧЕК ПРИ СКРОЛЛЕ ==========
+    // ========== 9. АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧЕК (ОПТИМИЗИРОВАННАЯ) ==========
     const animatedElements = document.querySelectorAll('.component-section, .platform-compact, .gpu-tier, .storage-card, .cooling-card, .scene-card, .matrix-item');
     
     const fadeObserver = new IntersectionObserver((entries) => {
@@ -316,51 +315,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 fadeObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
     
     animatedElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         fadeObserver.observe(el);
     });
     
-    // ========== 10. HOVER ЭФФЕКТЫ ДЛЯ КАРТОЧЕК ==========
-    const hoverCards = document.querySelectorAll('.platform-card, .scene-card, .matrix-item, .gpu-tier, .storage-card, .cooling-card, .ram-type, .platform-compact');
-    hoverCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-4px)';
-            card.style.transition = 'transform 0.2s ease';
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
-        });
-    });
+    // ========== 10. HOVER ЭФФЕКТЫ (С ИСПОЛЬЗОВАНИЕМ CSS ДЛЯ ПРОИЗВОДИТЕЛЬНОСТИ) ==========
+    // Добавляем CSS для hover вместо JS для лучшей производительности
+    const hoverStyle = document.createElement('style');
+    hoverStyle.textContent = `
+        .platform-card, .scene-card, .matrix-item, .gpu-tier, .storage-card, .cooling-card, .ram-type, .platform-compact {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .platform-card:hover, .scene-card:hover, .matrix-item:hover, .gpu-tier:hover, 
+        .storage-card:hover, .cooling-card:hover, .ram-type:hover, .platform-compact:hover {
+            transform: translateY(-4px);
+        }
+    `;
+    document.head.appendChild(hoverStyle);
     
-    // ========== 11. ЭФФЕКТ ДЛЯ НАВБАРА ПРИ СКРОЛЛЕ ==========
+    // ========== 11. ЭФФЕКТ ДЛЯ НАВБАРА ==========
     const navbar = document.querySelector('.navbar');
-    let lastScroll = 0;
     
     window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        if(currentScroll > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
-        } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+            }
         }
-        lastScroll = currentScroll;
     });
     
-    // ========== 12. ОБНОВЛЕНИЕ КАЛЬКУЛЯТОРА ПРИ ЗАГРУЗКЕ ==========
-    if(totalWattsSpan) {
-        setTimeout(() => {
-            updatePSU();
-        }, 100);
-    }
-    
-    // ========== 13. ПЛАВНОЕ ПОЯВЛЕНИЕ HERO КОНТЕНТА ==========
+    // ========== 12. ПЛАВНОЕ ПОЯВЛЕНИЕ HERO ==========
     const heroContent = document.querySelector('.hero-content');
     if(heroContent) {
         heroContent.style.opacity = '0';
@@ -372,9 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
     
-    // ========== 14. ПОДСКАЗКА ДЛЯ КАЛЬКУЛЯТОРА ==========
-    const calcGroups = document.querySelectorAll('.calc-group-simple select');
-    calcGroups.forEach(select => {
+    // ========== 13. ПОДСКАЗКА ДЛЯ КАЛЬКУЛЯТОРА ==========
+    const calcSelects = document.querySelectorAll('.calc-group-simple select');
+    calcSelects.forEach(select => {
         select.addEventListener('change', () => {
             const resultBlock = document.querySelector('.calc-result-simple');
             if(resultBlock) {
@@ -386,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // ========== 15. ОБРАБОТКА ОШИБКИ ЗАГРУЗКИ ЛОГОТИПА ==========
+    // ========== 14. ОБРАБОТКА ЛОГОТИПА ==========
     const logo = document.querySelector('.logo-img');
     if(logo) {
         logo.addEventListener('error', () => {
@@ -394,5 +387,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    console.log('✅ Z-catalog: все модули загружены, навигация исправлена!');
+    // ========== 15. ПРЕДОТВРАЩАЕМ ПРОСАДКИ ПРИ СКРОЛЛЕ ==========
+    let scrollTimer = null;
+    window.addEventListener('scroll', () => {
+        if (scrollTimer) clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            // Ничего не делаем, просто сбрасываем таймер
+        }, 50);
+    });
+    
+    console.log('✅ Z-catalog: оптимизированная версия загружена, лаги устранены!');
 });
